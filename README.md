@@ -10,3 +10,5 @@ Finally, on branches that are not master after the PR completes:
 git rebase -i master
 ```
 Just trust in vscode and it will work. Inshallah.
+
+*Jonathan is allowed to break these rules while setting up the project*
