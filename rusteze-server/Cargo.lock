@@ -981,7 +981,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rusteze-file-manager"
+name = "rusteze-fm"
 version = "0.1.0"
 dependencies = [
  "actix-web",
