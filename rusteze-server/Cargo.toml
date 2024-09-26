@@ -4,5 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+actix-files = "0.6.6"
 actix-web = "4"
 diesel = "2.2.4"
+utoipa = { version = "4.2.3", features = ["actix_extras"] }
