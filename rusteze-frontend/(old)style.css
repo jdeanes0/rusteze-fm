@@ -1,0 +1,68 @@
+body{
+    background:rgb(89, 90, 90);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#getTime{
+    color:rgb(216, 216, 216);
+    background-color:black;
+    border-radius: 10px;
+}
+#getTime:hover{
+    color:rgb(247, 247, 247);
+    background-color:rgb(44, 44, 44);
+}
+
+#fileSelect{
+    width: 150px;
+    height: 35px;
+    color: rgb(253, 253, 253);
+    background-color: black;
+    border-radius: 10px;
+}
+
+#fileSelect:hover{
+    color: white;
+    background-color:rgb(37, 37, 37);
+}
+
+nav ul{height:200px; width:18%;}
+nav ul{overflow:hidden; overflow-y:scroll;}
+
+#fileLink{
+    display: block;
+    padding: 5px 30px 5px 10px;
+    display: block;
+    color:rgb(253, 253, 253);
+    background-color:rgb(44, 44, 44);
+    border-radius: 10px;
+    margin: 5px 5px;
+    text-decoration: none;
+    user-select: none;
+}
+
+#backDir{
+    display: block;
+    padding: 5px 30px 5px 10px;
+    display: block;
+    color:rgb(165, 165, 165);
+    background-color:rgb(44, 44, 44);
+    border-radius: 10px;
+    margin: 5px 5px;
+    text-decoration: none;
+}
+
+#fileLink:hover{
+    color:rgb(253, 253, 253);
+    background-color:rgb(37, 37, 37);
+}
+
+#vidFrame{
+    width: 640px;
+    height:360px;
+    border-style:solid;
+    border-width: 1px;
+    border-color:rgb(139, 139, 139);
+    border-radius:10px;
+}
+

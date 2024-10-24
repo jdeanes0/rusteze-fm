@@ -1,12 +1,33 @@
-<!doctype html>
+<!-- File Manager HTML Document -->
+ <!-- TODO: Basically all UI work, this is just for testing the client/server code -->
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>This is the title of the webpage!</title>
-    <link rel="stylesheet" href="/web/twstyle.css">
-  </head>
-  <body class="bg-black">
-    <div class="bg-black">
-      <p class="text-lime-600 text-xl p-4 font-mono">This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
-    </div>
-  </body>
+<head>
+    <title>Rusteez File Manager</title>
+    <!--Currently referencing old CSS file because functionality not yet implemented in new one-->
+    <link rel="stylesheet" href="./web/(old)style.css">
+    <link rel="icon" type="image/x-icon" href="/web/favicon.ico">
+</head>
+<body>
+
+    <button id="getTime">Refresh</button>
+    <button id="messageServer">Message Server</button>
+
+    <p id="time"></p>
+
+    <center>
+        <video controls="true" id="vidFrame" src="/files/rocketVid.mp4"></video>
+    </center>
+
+    <label for="fileSelect">Select Desired Video:</label>
+
+
+    </select> 
+
+    <nav>
+        <ul id="fileMenu"></ul>
+    </nav>
+
+</body>
+<script src="./web/script.js"></script>
 </html>
