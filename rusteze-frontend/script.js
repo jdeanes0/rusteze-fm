@@ -117,6 +117,7 @@ async function fillList(){
     backDir.appendChild(document.createTextNode("../" + dirStack[dirStack.length-1].slice(0, dirStack[dirStack.length-1].length-1)));
     backDir.setAttribute("id", "fileOption");
     backDir.setAttribute("id", "backDir");
+    backDir.setAttribute("class", "my-1 pl-1 border-2 border-black rounded-md hover:bg-red-500 hover:bg-opacity-50")
     ul.appendChild(backDir);
   }
   for(let i = 0; i < list.length; i++){
@@ -124,12 +125,18 @@ async function fillList(){
     //fileList.options[fileList.options.length] = new Option(list[i].path.slice(10), realPath);
     
     let li = document.createElement("li");
-    li.appendChild(document.createTextNode(list[i].path.split("/")[list[i].path.split("/").length-1]));
+    let rawPath = list[i].path.split("/")[list[i].path.split("/").length-1]
+    // li.appendChild(document.createTextNode(list[i].path.split("/")[list[i].path.split("/").length-1]));
     li.setAttribute("id", "fileOption");
     li.setAttribute("onclick", "handleFileSelect(\""+realPath+"\", this.getAttribute(\"class\"))");
     li.setAttribute("id", "fileLink");
+    li.setAttribute("class", "my-1 pl-1 border-2 border-black rounded-md hover:bg-zinc-500");
     if(list[i].is_dir){
-      li.setAttribute("class", "isDirectory");
+      li.setAttribute("class", "isDirectory my-1 pl-1 border-2 border-black rounded-md hover:bg-blue-500 hover:bg-opacity-50");
+      rawPath += "/";
+      li.appendChild(document.createTextNode(rawPath));
+    } else {
+      li.appendChild(document.createTextNode(rawPath));
     }
     ul.appendChild(li);
     fileMenuElements.push(li);

@@ -3,30 +3,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rusteez File Manager</title>
+    <title>Rusteze File Manager</title>
     <!--Currently referencing old CSS file because functionality not yet implemented in new one-->
-    <link rel="stylesheet" href="./web/(old)style.css">
+    <link rel="stylesheet" href="./web/twstyle.css">
     <link rel="icon" type="image/x-icon" href="/web/favicon.ico">
 </head>
-<body>
+<body class="bg-zinc-600 p-4">
+    <div class="">
 
-    <button id="getTime">Refresh</button>
-    <button id="messageServer">Message Server</button>
+        <div class="p-4 w-1/4 h-screen float-left">
+            <button id="getTime" class="px-1 border-2 border-black rounded-md hover:bg-zinc-500">Refresh</button>
+            <button id="messageServer" class="px-1 border-2 border-black rounded-md hover:bg-zinc-500">Message Server</button>
 
-    <p id="time"></p>
+            <p id="time"></p>
 
-    <center>
-        <video controls="true" id="vidFrame" src="/files/rocketVid.mp4"></video>
-    </center>
+            <div class="absolute bottom-4">
+                <label for="fileSelect" class="text-2xl">Select File:</label>
 
-    <label for="fileSelect">Select Desired Video:</label>
+                <div class="max-w-xs">
+                    <ul id="fileMenu"></ul>
+                </div>
+            </div>
+        </div>
 
+        <div class="bg-zinc-500 w-3/4 h-screen float-right">
+            <center>
+                <iframe src="./files/flagPlant.mp4"></iframe>
+            </center>
+        </div>
 
-    </select> 
-
-    <nav>
-        <ul id="fileMenu"></ul>
-    </nav>
+    </div>
 
 </body>
 <script src="./web/script.js"></script>
