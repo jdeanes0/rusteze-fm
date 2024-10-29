@@ -7,7 +7,7 @@
 //  - rm: removes a file/directory, takes one argument, the file/directory to remove
 //  - rename: renames a file, takes one string argument, but must contain a comma separating the old and new names; ex: "oldName.txt,newName.txt"
 
-
+const FILE_ITEM_TW = " my-1 pl-1 border-2 border-black rounded-md cursor-pointer select-none";
 
 //DOM objects
 const getTimeBtn = document.getElementById('getTime');
@@ -117,11 +117,14 @@ async function fillList(){
     backDir.appendChild(document.createTextNode("../" + dirStack[dirStack.length-1].slice(0, dirStack[dirStack.length-1].length-1)));
     backDir.setAttribute("id", "fileOption");
     backDir.setAttribute("id", "backDir");
-    backDir.setAttribute("class", "my-1 pl-1 border-2 border-black rounded-md hover:bg-red-500 hover:bg-opacity-50")
+    backDir.setAttribute("selectable", false);
+    backDir.setAttribute("class", "hover:bg-red-500 hover:bg-opacity-50" + FILE_ITEM_TW)
     ul.appendChild(backDir);
   }
   for(let i = 0; i < list.length; i++){
-    let realPath = '/files/' + list[i].path.slice(10);
+    let realPath = '/files/' + list[i].path.slice(12);
+    console.log("noslice: ", list[i].path)
+    console.log("slice: ", list[i].path.slice(12))
     //fileList.options[fileList.options.length] = new Option(list[i].path.slice(10), realPath);
     
     let li = document.createElement("li");
@@ -130,9 +133,9 @@ async function fillList(){
     li.setAttribute("id", "fileOption");
     li.setAttribute("onclick", "handleFileSelect(\""+realPath+"\", this.getAttribute(\"class\"))");
     li.setAttribute("id", "fileLink");
-    li.setAttribute("class", "my-1 pl-1 border-2 border-black rounded-md hover:bg-zinc-500");
+    li.setAttribute("class", "hover:bg-zinc-500" + FILE_ITEM_TW);
     if(list[i].is_dir){
-      li.setAttribute("class", "isDirectory my-1 pl-1 border-2 border-black rounded-md hover:bg-blue-500 hover:bg-opacity-50");
+      li.setAttribute("class", "isDirectory hover:bg-blue-500 hover:bg-opacity-50" + FILE_ITEM_TW);
       rawPath += "/";
       li.appendChild(document.createTextNode(rawPath));
     } else {
@@ -153,6 +156,11 @@ function handleFileSelect(path, className){
     let newSubDir = path.split("/");
     newSubDir = newSubDir[newSubDir.length-1];
     getSubDir(newSubDir);
+  } else {
+    // populate the iframe with the element
+    let iframe = document.getElementById('displayFile');
+    iframe.src = path;
+    console.log(path);
   }
   console.log(path);
 }
