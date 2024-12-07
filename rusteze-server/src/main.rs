@@ -1,19 +1,18 @@
 // File Server Code
 //// TODO ////
+use actix_cors::Cors;
+use actix_files as fs;
+use actix_files::NamedFile;
 /// Add a way to call command functions in subdirectories
 /// Potentially utilize the dirStack from the client side, or create one here
-
 //Imports
 use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
-use actix_cors::Cors;
-use actix_files::NamedFile;
-use actix_files as fs;
-use std::path::PathBuf;
-use std::fs as stdfs;
 use chrono::prelude::*;
 use serde::Serialize;
+use std::fs as stdfs;
 use std::fs::File;
 use std::io::prelude::*;
+use std::path::PathBuf;
 
 //Struct for making file list json object, can be expanded
 #[derive(Serialize)]
@@ -36,7 +35,6 @@ async fn main() -> std::io::Result<()> {
             .route("/filelist", web::get().to(serve_file_list))
             .route("/action", web::post().to(handle_msgs))
             .route("/{filename:.*}", web::get().to(index)) //Give access to filesystem
-            
     })
     .bind(("127.0.0.1", 8080))? //Live at 127.0.0.1:8080
     .run() //Start the server
@@ -63,31 +61,47 @@ async fn serve_time() -> impl Responder {
 async fn handle_msgs(raw_json: String) -> impl Responder {
     let json: serde_json::Value =
         serde_json::from_str(raw_json.as_str()).expect("JSON was not well-formatted");
-    let name = json.as_object().unwrap().get("name").unwrap().to_string().split("\"").collect::<Vec<&str>>()[1].to_string();
+    let name = json
+        .as_object()
+        .unwrap()
+        .get("name")
+        .unwrap()
+        .to_string()
+        .split("\"")
+        .collect::<Vec<&str>>()[1]
+        .to_string();
     println!("Calling: {:?}", name);
-    let msg = json.as_object().unwrap().get("msg").unwrap().to_string().split("\"").collect::<Vec<&str>>()[1].to_string();
+    let msg = json
+        .as_object()
+        .unwrap()
+        .get("msg")
+        .unwrap()
+        .to_string()
+        .split("\"")
+        .collect::<Vec<&str>>()[1]
+        .to_string();
     let mut res = Vec::new();
-    if(name.as_str() == "cd"){
+    if (name.as_str() == "cd") {
         println!("Message: {:?}", msg);
         res = serve_subdirectories(msg).await;
-    } else if(name.as_str() == "touch"){
+    } else if (name.as_str() == "touch") {
         println!("Message: {:?}", msg);
         touch(msg).unwrap();
-    } else if(name.as_str() == "mkdir"){
+    } else if (name.as_str() == "mkdir") {
         println!("Message: {:?}", msg);
         mkdir(msg).unwrap();
-    } else if(name.as_str() == "rm"){
+    } else if (name.as_str() == "rm") {
         println!("Message: {:?}", msg);
         rm(msg).unwrap();
-    } else if(name.as_str() == "rename"){
+    } else if (name.as_str() == "rename") {
         println!("Message: {:?}", msg);
         rename(msg).unwrap();
     } else {
-        match msg.as_str(){
-            "print"=>print_message(msg).await,
-            "mkfl"=>print_message(msg).await,
+        match msg.as_str() {
+            "print" => print_message(msg).await,
+            "mkfl" => print_message(msg).await,
             //"cd"=>serve_subdirectories(msg).await,
-            _=>print_message(msg).await,
+            _ => print_message(msg).await,
         };
     };
     //println!("{:?}",res[0].path);
@@ -96,9 +110,8 @@ async fn handle_msgs(raw_json: String) -> impl Responder {
 
 //print out the body of the request
 async fn print_message(msg: String) -> impl Responder {
-
     print!("{:?}", msg);
-    
+
     HttpResponse::Ok().json("Acknowledged")
 }
 
@@ -109,7 +122,7 @@ async fn print_message(msg: String) -> impl Responder {
 }*/
 
 //Serve a json object containing all files in the user-files folder
-async fn serve_subdirectories(sub: String) -> Vec<FileList>{
+async fn serve_subdirectories(sub: String) -> Vec<FileList> {
     let paths = stdfs::read_dir("./user-files".to_string() + sub.as_str()).unwrap();
     let mut path_list = Vec::new();
     let mut temp_string;
@@ -117,13 +130,13 @@ async fn serve_subdirectories(sub: String) -> Vec<FileList>{
         temp_string = path.unwrap().path().display().to_string();
         let md = PathBuf::from(temp_string.clone());
         let is_directory = md.is_dir();
-        let json_builder = FileList{
+        let json_builder = FileList {
             path: temp_string,
             is_dir: is_directory,
         };
         path_list.push(json_builder);
     }
-    return path_list
+    return path_list;
 }
 
 //Serve a json object containing all files in the user-files folder
@@ -136,7 +149,7 @@ async fn serve_file_list() -> impl Responder {
         temp_string = path.unwrap().path().display().to_string();
         let md = PathBuf::from(temp_string.clone());
         let is_directory = md.is_dir();
-        let json_builder = FileList{
+        let json_builder = FileList {
             path: temp_string,
             is_dir: is_directory,
         };
@@ -154,7 +167,7 @@ async fn index(req: HttpRequest) -> actix_web::Result<NamedFile> {
 //  Currently only makes a txt file, remove .txt string to let user specify
 fn touch(arg: String) -> std::io::Result<()> {
     let a = "./user-files/";
-    let mut file = File::create(a.to_string()+ arg.as_str() +".txt")?;
+    let mut file = File::create(a.to_string() + arg.as_str() + ".txt")?;
     file.write_all(b"")?;
     Ok(())
 }
@@ -162,17 +175,17 @@ fn touch(arg: String) -> std::io::Result<()> {
 //Creates a directory based on the input parameter string
 fn mkdir(arg: String) -> std::io::Result<()> {
     let a = "./user-files/";
-    stdfs::create_dir(a.to_string()+ arg.as_str())?;
+    stdfs::create_dir(a.to_string() + arg.as_str())?;
     Ok(())
 }
 
 //Removes a file or directory based on the input parameter string
 fn rm(arg: String) -> std::io::Result<()> {
     let a = "./user-files/";
-    if(PathBuf::from(a.to_string()+ arg.as_str()).is_file()){
-        stdfs::remove_file(a.to_string()+ arg.as_str())?;
-    } else if(PathBuf::from(a.to_string()+ arg.as_str()).is_dir()){
-        stdfs::remove_dir_all(a.to_string()+ arg.as_str())?;
+    if (PathBuf::from(a.to_string() + arg.as_str()).is_file()) {
+        stdfs::remove_file(a.to_string() + arg.as_str())?;
+    } else if (PathBuf::from(a.to_string() + arg.as_str()).is_dir()) {
+        stdfs::remove_dir_all(a.to_string() + arg.as_str())?;
     }
     Ok(())
 }
@@ -182,9 +195,8 @@ fn rm(arg: String) -> std::io::Result<()> {
 fn rename(arg: String) -> std::io::Result<()> {
     let a = "./user-files/";
     let names: Vec<&str> = arg.split(",").collect();
-    stdfs::rename(a.to_string()+ names[0], a.to_string()+ names[1])?;
+    stdfs::rename(a.to_string() + names[0], a.to_string() + names[1])?;
     Ok(())
 }
 
 //TODO: Implement move function
-

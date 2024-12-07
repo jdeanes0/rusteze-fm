@@ -1,37 +1,129 @@
 <!-- File Manager HTML Document -->
- <!-- TODO: Basically all UI work, this is just for testing the client/server code -->
+<!-- TODO: Basically all UI work, this is just for testing the client/server code -->
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Rusteze File Manager</title>
     <!--Currently referencing old CSS file because functionality not yet implemented in new one-->
-    <link rel="stylesheet" href="./web/twstyle.css">
-    <link rel="icon" type="image/x-icon" href="/web/favicon.ico">
-</head>
-<body class="bg-zinc-600 p-4">
+    <link rel="stylesheet" href="./web/twstyle.css" />
+    <link rel="icon" type="image/x-icon" href="/web/favicon.ico" />
+    <style>
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        padding: 20px;
+        border: 1px solid black;
+        width: 300px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-zinc-600 p-4">
     <div class="">
+      <div class="p-4 w-1/4 h-screen float-left">
+        <button
+          id="getTime"
+          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
+        >
+          Refresh
+        </button>
+        <button
+          id="messageServer"
+          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
+        >
+          Message Server
+        </button>
 
-        <div class="p-4 w-1/4 h-screen float-left">
-            <button id="getTime" class="px-1 border-2 border-black rounded-md hover:bg-zinc-500">Refresh</button>
-            <button id="messageServer" class="px-1 border-2 border-black rounded-md hover:bg-zinc-500">Message Server</button>
+        <p id="time"></p>
 
-            <p id="time"></p>
-
-            <div class="absolute bottom-4">
-                <label for="fileSelect" class="text-2xl">Select File:</label>
-
-                <div class="max-w-xs">
-                    <ul id="fileMenu"></ul>
-                </div>
-            </div>
+        <button
+          id="doTouch"
+          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
+        >
+          New File
+        </button>
+        <div id="myModal" class="modal">
+          <div class="modal-content bg-zinc-600">
+            <span id="closeModalBtn" class="text-red-500 cursor-pointer"
+              >&times;</span
+            >
+            <input
+              type="text"
+              id="fnInput"
+              class="px-1 border-2 border-black rounded-md"
+              placeholder="File name..."
+            />
+            <button
+              id="submitBtn"
+              class="mt-1 px-1 border-2 border-black rounded-md hover:bg-zinc-500"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+        <button
+          id="doRemove"
+          class="px-1 border-2 border-black rounded-md hover:bg-red-500 hover:bg-opacity-50"
+        >
+          Remove File
+        </button>
+        <button
+          id="doRename"
+          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
+        >
+          Rename File
+        </button>
+        <div id="myRenameModal" class="modal">
+          <div class="modal-content bg-zinc-600">
+            <span id="closeRenameModalBtn" class="text-red-500 cursor-pointer"
+              >&times;</span
+            >
+            <input
+              type="text"
+              id="fnRenameInput"
+              class="px-1 border-2 border-black rounded-md"
+              placeholder="File name PLUS ext."
+            />
+            <button
+              id="submitRenameBtn"
+              class="mt-1 px-1 border-2 border-black rounded-md hover:bg-zinc-500"
+            >
+              Submit
+            </button>
+          </div>
         </div>
 
-        <div class="bg-zinc-500 w-3/4 h-screen float-right flex items-center justify-center flex-col">
-            <iframe id="displayFile" src="./files/flagPlant.mp4" class="w-full h-full"></iframe>
-        </div>
+        <div class="absolute bottom-4">
+          <label for="fileSelect" class="text-2xl">Select File:</label>
 
+          <div class="max-w-xs">
+            <ul id="fileMenu"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-zinc-500 w-3/4 h-screen float-right flex items-center justify-center flex-col"
+      >
+        <iframe
+          id="displayFile"
+          src="./files/flagPlant.mp4"
+          class="w-full h-full"
+        ></iframe>
+      </div>
     </div>
-
-</body>
-<script src="./web/script.js"></script>
+  </body>
+  <script src="./web/script.js"></script>
 </html>
