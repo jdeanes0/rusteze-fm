@@ -8,13 +8,11 @@
 //  - rename: renames a file, takes one string argument, but must contain a comma separating the old and new names; ex: "oldName.txt,newName.txt"
 
 const FILE_ITEM_TW =
-  " my-1 pl-1 border-2 border-black rounded-md cursor-pointer select-none";
+  " my-1 pl-1 border-2 border-zinc rounded-md cursor-pointer select-none";
 
 //DOM objects
-const getTimeBtn = document.getElementById("getTime");
 const fileMenu = document.getElementById("fileMenu");
 const vidFrame = document.getElementById("vidFrame");
-const actionBtn = document.getElementById("messageServer");
 
 const touchBtn = document.getElementById("doTouch");
 const closeModalBtn = document.getElementById("closeModalBtn");
@@ -32,16 +30,10 @@ let selectedFile = ""; //Contains the name of the file currently hosted in the i
 
 //When page loads, initialize things
 document.body.onload = async (e) => {
-  getTime();
   await getFileList();
   fillList();
 };
 
-//Update the time and refresh file list on press
-getTimeBtn.onclick = (e) => {
-  getTime();
-  fillList();
-};
 
 touchBtn.onclick = (e) => {
   // how the hell do I get the name of the file from the user
@@ -96,19 +88,6 @@ async function refreshFiles() {
   await getFileList();
   fillList();
   // console.log(currentFiles)
-}
-
-//send a request to the server on buton press
-actionBtn.onclick = async (e) => {
-  console.log(await postMessage("print", "Hello World!"));
-  console.log(await postMessage("rename", "foo.txt,bar.txt"));
-};
-
-//Retrieve time from server
-async function getTime() {
-  fetch("/time")
-    .then((response) => response.json())
-    .then((data) => (document.getElementById("time").innerHTML = data));
 }
 
 //Send request to server, not implemented well yet...
@@ -185,34 +164,44 @@ async function fillList() {
     );
     ul.appendChild(backDir);
   }
-  for (let i = 0; i < list.length; i++) {
-    let realPath = "/files/" + list[i].path.slice(12);
-    console.log("noslice: ", list[i].path);
-    console.log("slice: ", list[i].path.slice(12));
-    //fileList.options[fileList.options.length] = new Option(list[i].path.slice(10), realPath);
+  for(let j = 0; j < 2; j++){
+    for (let i = 0; i < list.length; i++) {
+      let realPath = "/files/" + list[i].path.slice(12);
+      //console.log("noslice: ", list[i].path);
+      //console.log("slice: ", list[i].path.slice(12));
+      //fileList.options[fileList.options.length] = new Option(list[i].path.slice(10), realPath);
 
-    let li = document.createElement("li");
-    let rawPath = list[i].path.split("/")[list[i].path.split("/").length - 1];
-    // li.appendChild(document.createTextNode(list[i].path.split("/")[list[i].path.split("/").length-1]));
-    li.setAttribute("id", "fileOption");
-    li.setAttribute(
-      "onclick",
-      'handleFileSelect("' + realPath + '", this.getAttribute("class"))'
-    );
-    li.setAttribute("id", "fileLink");
-    li.setAttribute("class", "hover:bg-zinc-500" + FILE_ITEM_TW);
-    if (list[i].is_dir) {
+      let li = document.createElement("li");
+      let rawPath = list[i].path.split("/")[list[i].path.split("/").length - 1];
+      // li.appendChild(document.createTextNode(list[i].path.split("/")[list[i].path.split("/").length-1]));
+      li.setAttribute("id", "fileOption");
       li.setAttribute(
-        "class",
-        "isDirectory hover:bg-blue-500 hover:bg-opacity-50" + FILE_ITEM_TW
+        "onclick",
+        'handleFileSelect("' + realPath + '", this.getAttribute("class"))'
       );
-      rawPath += "/";
-      li.appendChild(document.createTextNode(rawPath));
-    } else {
-      li.appendChild(document.createTextNode(rawPath));
+      li.setAttribute("id", "fileLink");
+      li.setAttribute("class", "hover:bg-zinc-400 w-full" + FILE_ITEM_TW);
+      if (list[i].is_dir) {
+        li.setAttribute(
+          "class",
+          "isDirectory hover:bg-blue-500 hover:bg-opacity-50" + FILE_ITEM_TW
+        );
+        rawPath += "/";
+        li.appendChild(document.createTextNode(rawPath));
+      } else {
+        li.appendChild(document.createTextNode(rawPath));
+      }
+      
+      if(j == 0 && list[i].is_dir){
+        console.log("isDir");
+        fileMenuElements.push(li);
+        ul.appendChild(li);
+      } else if (j == 1 && !list[i].is_dir){
+        console.log("isNotDir");
+        fileMenuElements.push(li);
+        ul.appendChild(li);
+      }
     }
-    ul.appendChild(li);
-    fileMenuElements.push(li);
   }
 }
 

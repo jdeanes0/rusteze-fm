@@ -21,6 +21,7 @@ struct FileList {
     is_dir: bool,
 }
 
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     //Create the HTTP server
@@ -30,8 +31,6 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .service(fs::Files::new("/files", "./user-files").show_files_listing()) //Gives access to files in the user-files folder at /files
             .service(fs::Files::new("/web", "../rusteze-frontend").index_file("index.html")) //Host website client files at /web
-            .route("/hey", web::get().to(manual_hello)) //Serves hello message
-            .route("/time", web::get().to(serve_time)) //Serves time
             .route("/filelist", web::get().to(serve_file_list))
             .route("/action", web::post().to(handle_msgs))
             .route("/{filename:.*}", web::get().to(index)) //Give access to filesystem
@@ -58,6 +57,7 @@ async fn serve_time() -> impl Responder {
     HttpResponse::Ok().json(now)
 }
 
+#[allow(unused_parens)]
 async fn handle_msgs(raw_json: String) -> impl Responder {
     let json: serde_json::Value =
         serde_json::from_str(raw_json.as_str()).expect("JSON was not well-formatted");
@@ -180,6 +180,7 @@ fn mkdir(arg: String) -> std::io::Result<()> {
 }
 
 //Removes a file or directory based on the input parameter string
+#[allow(unused_parens)]
 fn rm(arg: String) -> std::io::Result<()> {
     let a = "./user-files/";
     if (PathBuf::from(a.to_string() + arg.as_str()).is_file()) {

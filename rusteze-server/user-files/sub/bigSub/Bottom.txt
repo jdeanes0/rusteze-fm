@@ -1,1 +1,1 @@
-Bottom.
+Bottom. This file is the bottom of the directory.
