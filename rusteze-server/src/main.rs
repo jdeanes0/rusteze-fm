@@ -1,26 +1,24 @@
 // File Server Code
-//// TODO ////
+
+// Imports
 use actix_cors::Cors;
 use actix_files as fs;
 use actix_files::NamedFile;
-/// Add a way to call command functions in subdirectories
-/// Potentially utilize the dirStack from the client side, or create one here
-//Imports
 use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
-use chrono::prelude::*;
 use serde::Serialize;
 use std::fs as stdfs;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 
-//Struct for making file list json object, can be expanded
+// Struct for making file list json object, includes path and if it is a directory
 #[derive(Serialize)]
 struct FileList {
     path: String,
     is_dir: bool,
 }
 
+// Main function, creates the server and binds listener functions
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     //Create the HTTP server
@@ -30,34 +28,17 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .service(fs::Files::new("/files", "./user-files").show_files_listing()) //Gives access to files in the user-files folder at /files
             .service(fs::Files::new("/web", "../rusteze-frontend").index_file("index.html")) //Host website client files at /web
-            .route("/hey", web::get().to(manual_hello)) //Serves hello message
-            .route("/time", web::get().to(serve_time)) //Serves time
             .route("/filelist", web::get().to(serve_file_list))
             .route("/action", web::post().to(handle_msgs))
             .route("/{filename:.*}", web::get().to(index)) //Give access to filesystem
     })
-    .bind(("127.0.0.1", 8080))? //Live at 127.0.0.1:8080
+    .bind(("127.0.0.1", 8080))? //Live at 127.0.0.1:8080 (localhost HTTP port)
     .run() //Start the server
     .await //Await requests
 }
 
-//Get request using services
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
-//Manual request using route
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
-
-//Serves the current UTC time in a JSON object
-async fn serve_time() -> impl Responder {
-    let now = Utc::now().to_string();
-    HttpResponse::Ok().json(now)
-}
-
+//Handle messages from server, take action according to passed parameter (touch, rm, rename...)
+#[allow(unused_parens)]
 async fn handle_msgs(raw_json: String) -> impl Responder {
     let json: serde_json::Value =
         serde_json::from_str(raw_json.as_str()).expect("JSON was not well-formatted");
@@ -100,28 +81,20 @@ async fn handle_msgs(raw_json: String) -> impl Responder {
         match msg.as_str() {
             "print" => print_message(msg).await,
             "mkfl" => print_message(msg).await,
-            //"cd"=>serve_subdirectories(msg).await,
             _ => print_message(msg).await,
         };
     };
-    //println!("{:?}",res[0].path);
     HttpResponse::Ok().json(res)
 }
 
-//print out the body of the request
+//print out the body of the request (used for debugging)
 async fn print_message(msg: String) -> impl Responder {
     print!("{:?}", msg);
 
     HttpResponse::Ok().json("Acknowledged")
 }
 
-//Changes the current file path
-/*async fn change_file_path(toPath: String) -> impl Responder {
-    serve_subdirectories(toPath).await;
-    HttpResponse::Ok().json("Acknowledged")
-}*/
-
-//Serve a json object containing all files in the user-files folder
+//Serve a json object containing all files in the specified directory
 async fn serve_subdirectories(sub: String) -> Vec<FileList> {
     let paths = stdfs::read_dir("./user-files".to_string() + sub.as_str()).unwrap();
     let mut path_list = Vec::new();
@@ -139,7 +112,7 @@ async fn serve_subdirectories(sub: String) -> Vec<FileList> {
     return path_list;
 }
 
-//Serve a json object containing all files in the user-files folder
+//Serve a json object containing all files in the user-files top-level folder
 async fn serve_file_list() -> impl Responder {
     let paths = stdfs::read_dir("./user-files").unwrap();
     println!("{:?}", paths);
@@ -158,16 +131,16 @@ async fn serve_file_list() -> impl Responder {
     HttpResponse::Ok().json(path_list)
 }
 
-//Handle requests to fileserver
+// Serve the requested file
 async fn index(req: HttpRequest) -> actix_web::Result<NamedFile> {
     let path: PathBuf = req.match_info().query("filename").parse().unwrap();
     Ok(NamedFile::open(path)?)
 }
+
 //Function makes a file named based on the input parameter string
-//  Currently only makes a txt file, remove .txt string to let user specify
 fn touch(arg: String) -> std::io::Result<()> {
     let a = "./user-files/";
-    let mut file = File::create(a.to_string() + arg.as_str() + ".txt")?;
+    let mut file = File::create(a.to_string() + arg.as_str())?;
     file.write_all(b"")?;
     Ok(())
 }
@@ -180,6 +153,7 @@ fn mkdir(arg: String) -> std::io::Result<()> {
 }
 
 //Removes a file or directory based on the input parameter string
+#[allow(unused_parens)]
 fn rm(arg: String) -> std::io::Result<()> {
     let a = "./user-files/";
     if (PathBuf::from(a.to_string() + arg.as_str()).is_file()) {
@@ -199,4 +173,3 @@ fn rename(arg: String) -> std::io::Result<()> {
     Ok(())
 }
 
-//TODO: Implement move function

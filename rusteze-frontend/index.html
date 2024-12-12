@@ -1,13 +1,14 @@
 <!-- File Manager HTML Document -->
-<!-- TODO: Basically all UI work, this is just for testing the client/server code -->
+
 <!DOCTYPE html>
 <html>
   <head>
     <title>Rusteze File Manager</title>
-    <!--Currently referencing old CSS file because functionality not yet implemented in new one-->
+    <!-- Reference to the tailwind stylesheet -->
     <link rel="stylesheet" href="./web/twstyle.css" />
     <link rel="icon" type="image/x-icon" href="/web/favicon.ico" />
     <style>
+      /* Styling for popup textbox */
       .modal {
         display: none;
         position: fixed;
@@ -30,27 +31,14 @@
     </style>
   </head>
 
+  
   <body class="bg-zinc-600 p-4">
-    <div class="">
-      <div class="p-4 w-1/4 h-screen float-left">
-        <button
-          id="getTime"
-          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
-        >
-          Refresh
-        </button>
-        <button
-          id="messageServer"
-          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
-        >
-          Message Server
-        </button>
-
-        <p id="time"></p>
-
+      
+    <!-- File manipulation buttons -->
+      <div style="float:right;height:10%; width:75%;margin-bottom:15px;padding:4px;border-radius:5px;display:block;background-color: rgb(113, 113, 122);">
         <button
           id="doTouch"
-          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
+          class="px-1 border-2 border-black rounded-md hover:bg-zinc-400"
         >
           New File
         </button>
@@ -74,17 +62,22 @@
           </div>
         </div>
         <button
+          id="doRename"
+          class="px-1 border-2 border-black rounded-md hover:bg-zinc-400"
+        >
+          Rename
+        </button>
+        <button
           id="doRemove"
           class="px-1 border-2 border-black rounded-md hover:bg-red-500 hover:bg-opacity-50"
         >
-          Remove File
+          Delete
         </button>
-        <button
-          id="doRename"
-          class="px-1 border-2 border-black rounded-md hover:bg-zinc-500"
-        >
-          Rename File
-        </button>
+      </div>
+
+
+      <!-- Popup textbox -->
+      <div class="p-4 w-1/4 h-full float-left">
         <div id="myRenameModal" class="modal">
           <div class="modal-content bg-zinc-600">
             <span id="closeRenameModalBtn" class="text-red-500 cursor-pointer"
@@ -104,18 +97,23 @@
             </button>
           </div>
         </div>
+        
 
-        <div class="absolute bottom-4">
-          <label for="fileSelect" class="text-2xl">Select File:</label>
-
+        <!-- File browser -->
+        <label for="fileSelect" class="text-2xl"style="margin-bottom:15px;padding:4px;height:10%;">File Browser</label>
+        <div class="absolute top-5 h-90vh"style="background-color: rgb(113 113 122); padding:5px; border-radius:5px;width:20%;">
+        
           <div class="max-w-xs">
             <ul id="fileMenu"></ul>
           </div>
         </div>
       </div>
 
+
+      <!-- Content display menu  -->
       <div
-        class="bg-zinc-500 w-3/4 h-screen float-right flex items-center justify-center flex-col"
+        class="bg-zinc-500 w-3/4 h-90vh float-right flex items-center justify-center flex-col"
+        style="border-radius:5px"
       >
         <iframe
           id="displayFile"
@@ -123,7 +121,9 @@
           class="w-full h-full"
         ></iframe>
       </div>
-    </div>
+
+
   </body>
+  <!-- Javascript client file -->
   <script src="./web/script.js"></script>
 </html>
