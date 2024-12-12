@@ -1,3 +1,6 @@
+Welcome to the Rusteze File Manager!
+
+
 # PLEASE READ THIS BEFORE CONTRIBUTING
 When you want to add to the repository, create a feature branch with:
 ```
@@ -9,6 +12,6 @@ Finally, on branches that are not master after the PR completes:
 ```
 git rebase -i master
 ```
-Just trust in vscode and it will work. Inshallah.
 
-*Jonathan is allowed to break these rules while setting up the project*
+Use `npx tailwindcss -i ./style.css -o ./twstyle.css` to build the tailwind file whenever you want to see new changes.
+

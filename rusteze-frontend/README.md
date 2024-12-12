@@ -1,1 +1,0 @@
-Use `npx tailwindcss -i ./style.css -o ./twstyle.css` to build the tailwind file whenever you want to see new changes.

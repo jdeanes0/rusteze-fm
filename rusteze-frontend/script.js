@@ -34,17 +34,17 @@ document.body.onload = async (e) => {
   fillList();
 };
 
-
+//Open the textbox on click
 touchBtn.onclick = (e) => {
-  // how the hell do I get the name of the file from the user
   document.getElementById("myModal").style.display = "flex";
 };
 
+//Open the new file textbox on click
 closeModalBtn.onclick = (e) => {
-  // how the hell do I get the name of the file from the user
   document.getElementById("myModal").style.display = "none";
 };
 
+// Submits the request to create a new file with the given name
 submitModalBtn.onclick = (e) => {
   let fileName = document.getElementById("fnInput").value;
   document.getElementById("myModal").style.display = "none";
@@ -55,6 +55,7 @@ submitModalBtn.onclick = (e) => {
   refreshFiles().catch((error) => console.log(error));
 };
 
+// Deletes the currently opened file
 removeBtn.onclick = (e) => {
   postMessage("rm", dirStack.join("") + selectedFile).catch((error) =>
     console.error(error)
@@ -62,15 +63,17 @@ removeBtn.onclick = (e) => {
   refreshFiles().catch((error) => console.log(error));
 };
 
+// Opens the rename file textbox
 renameBtn.onclick = (e) => {
   document.getElementById("myRenameModal").style.display = "flex";
 };
 
+// Exit out of the textbox without submitting
 closeRenameModalBtn.onclick = (e) => {
-  // how the hell do I get the name of the file from the user
   document.getElementById("myRenameModal").style.display = "none";
 };
 
+// Submit the request to rename with the given parameters
 submitRenameModalBtn.onclick = (e) => {
   let fileName = document.getElementById("fnRenameInput").value;
   document.getElementById("myRenameModal").style.display = "none";
@@ -87,7 +90,6 @@ submitRenameModalBtn.onclick = (e) => {
 async function refreshFiles() {
   await getFileList();
   fillList();
-  // console.log(currentFiles)
 }
 
 //Send request to server, not implemented well yet...
@@ -102,8 +104,7 @@ async function postMessage(name, msg) {
   console.log(response);
 }
 
-//Retreive a json object containing files in 'public' directory
-//TODO: Add support for sub-directories
+//Retreive a json object containing files in 'filelist' directory
 async function getFileList() {
   const response = await fetch("/filelist");
   const json = await response.json();
@@ -164,16 +165,14 @@ async function fillList() {
     );
     ul.appendChild(backDir);
   }
+  // Create DOM elements, looping once to get folders, then again for files.
   for(let j = 0; j < 2; j++){
     for (let i = 0; i < list.length; i++) {
-      let realPath = "/files/" + list[i].path.slice(12);
-      //console.log("noslice: ", list[i].path);
-      //console.log("slice: ", list[i].path.slice(12));
-      //fileList.options[fileList.options.length] = new Option(list[i].path.slice(10), realPath);
 
+      let realPath = "/files/" + list[i].path.slice(12);
       let li = document.createElement("li");
       let rawPath = list[i].path.split("/")[list[i].path.split("/").length - 1];
-      // li.appendChild(document.createTextNode(list[i].path.split("/")[list[i].path.split("/").length-1]));
+
       li.setAttribute("id", "fileOption");
       li.setAttribute(
         "onclick",
@@ -205,8 +204,7 @@ async function fillList() {
   }
 }
 
-//Take an action once a file is clicked on in the file browser
-//  Currently only determines if the file is a directory or not to navigate
+//Take an action once a button is clicked on in the file browser depending on if it is a file or a folder
 function handleFileSelect(path, className) {
   console.log("Class: ", className);
   console.log(className);

@@ -1,13 +1,14 @@
 <!-- File Manager HTML Document -->
-<!-- TODO: Basically all UI work, this is just for testing the client/server code -->
+
 <!DOCTYPE html>
 <html>
   <head>
     <title>Rusteze File Manager</title>
-    <!--Currently referencing old CSS file because functionality not yet implemented in new one-->
+    <!-- Reference to the tailwind stylesheet -->
     <link rel="stylesheet" href="./web/twstyle.css" />
     <link rel="icon" type="image/x-icon" href="/web/favicon.ico" />
     <style>
+      /* Styling for popup textbox */
       .modal {
         display: none;
         position: fixed;
@@ -30,8 +31,10 @@
     </style>
   </head>
 
+  
   <body class="bg-zinc-600 p-4">
       
+    <!-- File manipulation buttons -->
       <div style="float:right;height:10%; width:75%;margin-bottom:15px;padding:4px;border-radius:5px;display:block;background-color: rgb(113, 113, 122);">
         <button
           id="doTouch"
@@ -70,9 +73,10 @@
         >
           Delete
         </button>
-
       </div>
 
+
+      <!-- Popup textbox -->
       <div class="p-4 w-1/4 h-full float-left">
         <div id="myRenameModal" class="modal">
           <div class="modal-content bg-zinc-600">
@@ -93,7 +97,9 @@
             </button>
           </div>
         </div>
+        
 
+        <!-- File browser -->
         <label for="fileSelect" class="text-2xl"style="margin-bottom:15px;padding:4px;height:10%;">File Browser</label>
         <div class="absolute top-5 h-90vh"style="background-color: rgb(113 113 122); padding:5px; border-radius:5px;width:20%;">
         
@@ -103,6 +109,8 @@
         </div>
       </div>
 
+
+      <!-- Content display menu  -->
       <div
         class="bg-zinc-500 w-3/4 h-90vh float-right flex items-center justify-center flex-col"
         style="border-radius:5px"
@@ -113,6 +121,9 @@
           class="w-full h-full"
         ></iframe>
       </div>
+
+
   </body>
+  <!-- Javascript client file -->
   <script src="./web/script.js"></script>
 </html>
