@@ -7,7 +7,6 @@ use actix_files::NamedFile;
 /// Potentially utilize the dirStack from the client side, or create one here
 //Imports
 use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
-use chrono::prelude::*;
 use serde::Serialize;
 use std::fs as stdfs;
 use std::fs::File;
@@ -44,17 +43,6 @@ async fn main() -> std::io::Result<()> {
 #[get("/")]
 async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
-}
-
-//Manual request using route
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
-
-//Serves the current UTC time in a JSON object
-async fn serve_time() -> impl Responder {
-    let now = Utc::now().to_string();
-    HttpResponse::Ok().json(now)
 }
 
 #[allow(unused_parens)]
